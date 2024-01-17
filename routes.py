@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, request, redirect, session
 
-from users import register, login 
+from users import register, login
 
 @app.route("/")
 def index():
@@ -17,10 +17,12 @@ def register_route():
         password2 = request.form["password2"]
         if password != password2:
             return render_template("error.html", message="Salasanat eroavat")
-        if register(username, password):  
+        if register(username, password):
             return redirect("/")
         else:
             return render_template("error.html", message="Rekisteröinti ei onnistunut")
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login_route():
     if request.method == "GET":
