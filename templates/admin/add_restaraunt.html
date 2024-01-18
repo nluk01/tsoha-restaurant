@@ -13,6 +13,12 @@
         <label for="description">Description:</label>
         <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
         <input type="submit" value="Add Restaurant">
+        <label for="groups">Select groups:</label>
+        <select id="groups" name="groups" multiple>
+            {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+            {% endfor %}
+        </select><br><br>
     </form>
 </body>
 </html>

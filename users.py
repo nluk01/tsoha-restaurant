@@ -1,4 +1,5 @@
 from flask import session
+from flask_login import login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import text
 
@@ -20,17 +21,6 @@ def register(username, password, is_admin=False):
     return True
 
 
-
-
-def get_user_id_by_username(username):
-    sql = text("SELECT id FROM users WHERE username=:username")
-    result = db.session.execute(sql, {"username": username})
-    user_id = result.scalar()
-    return user_id
-
-
-
-
 def login(username_input, password_input):
     sql = text("SELECT id, password, is_admin FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username": username_input})
@@ -45,8 +35,11 @@ def login(username_input, password_input):
             return False
 
 
-
-
+def get_user_id_by_username(username):
+    sql = text("SELECT id FROM users WHERE username=:username")
+    result = db.session.execute(sql, {"username": username})
+    user_id = result.scalar()
+    return user_id
 
 
 def user_id():

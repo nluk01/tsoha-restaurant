@@ -4,13 +4,13 @@ from flask_login import login_required
 from users import register, login, login_required
 
 
-from models import Restaurant
+from models import Restaurant, Add_group
 
 
+# Kirjautumis-jutut
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 
 
@@ -33,7 +33,6 @@ def register_route():
 
 
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login_route():
     if request.method == "GET":
@@ -46,6 +45,7 @@ def login_route():
             return redirect("/")
         else:
             return render_template("error.html", message="Wrong username or password.")
+        
 
 @app.route("/logout")
 def logout_route():
@@ -55,24 +55,39 @@ def logout_route():
 
 
 
+
 # Ravintola-jutut
 
-@app.route("/add_restaurant", methods=["GET", "POST"])
+@app.route("/admin/add_group", methods=["GET", "POST"])
+@login_required
+def add_group():
+    if request.method == "POST":
+        pass
+
+@app.route("/admin/add_restaurant", methods=["GET", "POST"])
 @login_required
 def add_restaurant():
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
+        group_ids = request.form.getlist("groups") 
 
         new_restaurant = Restaurant(name=name, description=description)
+
+        for group_id in group_ids:
+            group = Add_group.query.get(group_id)
+            if group:
+                new_restaurant.groups.append(group)
+
         db.session.add(new_restaurant)
         db.session.commit()
 
-    return redirect(url_for("index"))
+        groups = Add_group.query.all()
+        return render_template("add_restaurant.html", groups=groups)
 
 
 
-@app.route("/remove_restaurant/<int:restaurant_id>")
+@app.route("admin/remove_restaurant/<int:restaurant_id>")
 @login_required
 def remove_restaurant(restaurant_id):
     restaurant = Restaurant.query.get(restaurant_id)
