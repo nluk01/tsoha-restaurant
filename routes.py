@@ -1,17 +1,15 @@
 from app import app, db
-from flask import render_template, request, redirect, session, url_for
+from flask import render_template, request, redirect, session, url_for, g
 from flask_login import login_required
-from users import register, login, login_required
-
-
+from users import register, login
 from models import Restaurant, Add_group
+from flask_login import current_user
 
 
-# Kirjautumis-jutut
+
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -33,6 +31,7 @@ def register_route():
 
 
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login_route():
     if request.method == "GET":
@@ -40,12 +39,16 @@ def login_route():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        if login(username, password):
+        user = login(username, password)
+        if user:
             session["username"] = username
+            session["is_admin"] = user
             return redirect("/")
         else:
             return render_template("error.html", message="Wrong username or password.")
-        
+
+
+
 
 @app.route("/logout")
 def logout_route():
@@ -63,6 +66,7 @@ def logout_route():
 def add_group():
     if request.method == "POST":
         pass
+
 
 @app.route("/admin/add_restaurant", methods=["GET", "POST"])
 @login_required
@@ -87,7 +91,8 @@ def add_restaurant():
 
 
 
-@app.route("admin/remove_restaurant/<int:restaurant_id>")
+
+@app.route("/admin/remove_restaurant/<int:restaurant_id>")
 @login_required
 def remove_restaurant(restaurant_id):
     restaurant = Restaurant.query.get(restaurant_id)

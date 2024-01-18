@@ -1,10 +1,11 @@
 {% if session.username %}
-    <p>Olet kirjautunut nimellä {{ session.username }}</p>
-    <a href="/logout">Kirjaudu ulos</a>
+    <p>You are logged in as: {{ session.username }}</p>
     {% if session.is_admin %}
-        <a href="/admin/add_group"><button>Lisää ryhmä</button></a>
-        <a href="/admin/add_restaurant"><button>Lisää ravintola</button></a>
+        <p>You are admin.</p>
+        <a href="{{ url_for('add_group') }}"><button>Add group</button></a>
+        <a href="{{ url_for('add_restaurant') }}"><button>Add restaraunt</button></a>
     {% endif %}
+    <a href="/logout">Log out</a>
 {% else %}
     <header>
         <h2>Welcome to Restaraunt-app</h2>
