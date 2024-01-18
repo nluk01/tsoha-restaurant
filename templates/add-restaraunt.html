@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Restaurant</title>
+</head>
+<body>
+    <h1>Add Restaurant</h1>
+    <form action="/admin/add_restaurant" method="POST">
+        <label for="name">Restaurant Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
+        <input type="submit" value="Add Restaurant">
+    </form>
+</body>
+</html>
