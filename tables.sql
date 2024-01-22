@@ -1,4 +1,5 @@
--- Käyttäjät
+-- Käyttäjä jutut
+
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -6,34 +7,38 @@ CREATE TABLE users (
     is_admin BOOLEAN DEFAULT FALSE
 );
 
--- Ryhmät
+
+
+-- Ravintola jutut
+
+CREATE TABLE restaraunts (
+    restaraunt_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_by_user_id INT REFERENCES users(user_id),
+    PRIMARY KEY (restaraunt_id)
+);
+
+
 CREATE TABLE groups (
     group_id SERIAL PRIMARY KEY,
     group_name VARCHAR(50) NOT NULL
 );
 
--- Ravintolat
-CREATE TABLE restaurants (
-    restaurant_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    created_by_user_id INT REFERENCES users(user_id),
-    PRIMARY KEY (restaurant_id)
+
+CREATE TABLE restaraunt_groups (
+    restaraunt_id INT REFERENCES restaraunts(restaraunt_id),
+    group_id INT REFERENCES groups(group_id),
+    PRIMARY KEY (restaraunt_id, group_id)
 );
 
--- Arviot
+
 CREATE TABLE reviews (
     review_id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(user_id),
-    restaurant_id INT REFERENCES restaurants(restaurant_id),
+    restaraunt_id INT REFERENCES restaraunts(restaraunt_id),
     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
     review_text TEXT,
     PRIMARY KEY (review_id)
 );
 
--- Ryhmien ja ravintoloiden liitostaulu
-CREATE TABLE restaurant_groups (
-    restaurant_id INT REFERENCES restaurants(restaurant_id),
-    group_id INT REFERENCES groups(group_id),
-    PRIMARY KEY (restaurant_id, group_id)
-);

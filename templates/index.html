@@ -4,20 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Restaurant App</title>
+    <title>Welcome to Restaraunt App</title>
 </head>
 <body>
     <h1>Welcome to Restaurant App</h1>
-
-    {% if session.username %}
-        <p>Olet kirjautunut nimellä {{ session.username }}</p>
-        <a href="/logout">Kirjaudu ulos</a>
+    {% if username %}
+        <p>You are logged in as: {{ session.username }}</p>
+        <a href="/logout">Log out</a>
     {% else %}
         <div>
-            <a href="/login">Kirjaudu sisään</a>
+            <a href="/login">Login</a>
         </div>
         <div>
-            <a href="/register">Rekisteröidy</a>
+            <a href="/register">Register</a>
         </div>
     {% endif %}
 </body>

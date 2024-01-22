@@ -4,4 +4,4 @@ Ylläpitäjä voi lisätä tai poistaa savintoloista. Hän voi määrittää mit
 
 
 Ravintoloista voidaan etsiä tietoa ja lukea arvioita. Sovelluksessa on kartta, josta näkee tietyn alueen ravintolat. Kun ravintolasta painaa, niin siitä avautuu info-näkymä.
-Olen luonut app.py, jossa on mahdollisimman vähän tavaraa, se vain käynnistää sovelluksen. Routes.py jossa määritellään reitit, users.py käsittelee käyttäjiin liittyvää tietoa, dbp.py tietokannan konfigurointi ja tables.sql luodaan tietokantataulut.
+
