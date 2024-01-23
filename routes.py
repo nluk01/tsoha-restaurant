@@ -59,8 +59,6 @@ def logout():
 
 #Ravintola jutut
 
-@app.route("/add_restaraunt", methods=["POST"])
-def add_restaraunt():
-    
+
 
 
