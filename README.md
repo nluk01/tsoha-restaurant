@@ -16,6 +16,5 @@ Projektin aiheena on kehittää ravintolasovellus, jossa näkyy tietyn alueen ra
 
 
 -Ravintoloista voidaan etsiä tietoa ja lukea arvioita.
----------------------------------------------------------------------------------------------------
 -Sovelluksessa on kartta, josta näkee tietyn alueen ravintolat. Kun ravintolasta painaa, niin siitä avautuu info-näkymä. (EN TEE TÄTÄ!!)
 
