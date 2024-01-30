@@ -1,23 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Restaraunt App</title>
+    <title>Ravintolasovellus</title>
 </head>
 <body>
-    <h1>Welcome to Restaurant App</h1>
-    {% if username %}
+    <h1>Welcome to Restaurant-app!</h1>
+    {% if session.username %}
         <p>You are logged in as: {{ session.username }}</p>
         <a href="/logout">Log out</a>
+        {% if admin %}
+            <form action="/add_group" method="POST">
+                <p>Group Name:<br>
+                <input type="text" name="name"></p>
+                <input type="submit" value="Add Group">
+            </form>
+            <br>
+            <hr>
+            <form action="/add_restaurant" method="POST">
+                <p>Name:<br>
+                <input type="text" name="name"></p>
+                <p>Description:<br>
+                <textarea name="description"></textarea></p>
+                <p>Location:<br>
+                <input type="text" name="location"></p>
+                <p>Groups:</p>
+                <select name="groups" multiple>
+                    {% for group in all_groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select><br><br>
+                <input type="submit" value="Add Restaurant">
+            </form>
+        {% endif %}
     {% else %}
-        <div>
-            <a href="/login">Login</a>
-        </div>
-        <div>
-            <a href="/register">Register</a>
-        </div>
+        <a href="/login">Log in</a> |
+        <a href="/register">Register</a>
+    {% endif %}
+
+    {% if all_restaurants %}
+        <h2>All Restaurants:</h2>
+        <ul>
+            {% for restaurant in all_restaurants %}
+                <li>Name: {{ restaurant.name }}</li>
+                <li>Description: {{ restaurant.description }}</li>
+                <li>Location: {{ restaurant.location }}</li>
+                <li>Groups:
+                    {% for group in restaurant.groups %}
+                        {{ group }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </li>
+                {% if session.username %}
+                    <form action="/add_review/{{ restaurant.id }}" method="get">
+                        <input type="submit" value="Add Review">
+                    </form>
+                {% endif %}
+                {% if session.username and session.admin %}
+                    <form action="/delete_restaurant/{{ restaurant.id }}" method="post">
+                        <input type="submit" value="Delete">
+                    </form>
+                    <form action="/edit_restaurant/{{ restaurant.id }}" method="post">
+                        <input type="submit" value="Edit">
+                    </form>
+                {% endif %}
+                <hr>
+            {% endfor %}
+        </ul>
     {% endif %}
 </body>
 </html>

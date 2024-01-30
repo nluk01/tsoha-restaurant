@@ -1,44 +1,42 @@
--- Käyttäjä jutut
-
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    is_admin BOOLEAN DEFAULT FALSE
+    id SERIAL PRIMARY KEY,
+    username TEXT UNIQUE,
+    password TEXT,
+    admin BOOL DEFAULT false
 );
 
-
-
--- Ravintola jutut
-
-CREATE TABLE restaraunts (
-    restaraunt_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+-- Ravintolat-taulu
+CREATE TABLE restaurants (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
     description TEXT,
-    created_by_user_id INT REFERENCES users(user_id),
-    PRIMARY KEY (restaraunt_id)
+    location TEXT,
+    rating INTEGER,
+    created_by INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-CREATE TABLE groups (
-    group_id SERIAL PRIMARY KEY,
-    group_name VARCHAR(50) NOT NULL
-);
-
-
-CREATE TABLE restaraunt_groups (
-    restaraunt_id INT REFERENCES restaraunts(restaraunt_id),
-    group_id INT REFERENCES groups(group_id),
-    PRIMARY KEY (restaraunt_id, group_id)
-);
-
-
+-- Arviot-taulu
 CREATE TABLE reviews (
-    review_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id),
-    restaraunt_id INT REFERENCES restaraunts(restaraunt_id),
-    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    id SERIAL PRIMARY KEY,
+    restaurant_id INTEGER REFERENCES restaurants(id),
+    user_id INTEGER REFERENCES users(id),
     review_text TEXT,
-    PRIMARY KEY (review_id)
+    rating INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Ryhmät-taulu
+CREATE TABLE groups (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    created_by INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Ravintola-ryhmä yhteys -taulu
+CREATE TABLE restaurant_group (
+    id SERIAL PRIMARY KEY,
+    restaurant_id INTEGER REFERENCES restaurants(id),
+    group_id INTEGER REFERENCES groups(id)
+);

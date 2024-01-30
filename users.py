@@ -1,37 +1,43 @@
-import os
 from flask import session
 from db import db
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import text
 
 
-def register(username, password, is_admin=False):
+#Kirjautumis jutut
+
+def register(username, password, admin=False):
     hash_value = generate_password_hash(password)
     try:
-        sql = "INSERT INTO users (username, password, is_admin) VALUES (:username, :password, :is_admin)"
-        db.session.execute(text(sql), {"username": username, "password": hash_value, "is_admin": is_admin})
+        sql = "INSERT INTO users (username, password, admin) VALUES (:username, :password, :admin)"
+        db.session.execute(text(sql), {"username": username, "password": hash_value, "admin": admin})
         db.session.commit()
+        return True
     except Exception as e:
         print(f"Error during registration: {e}")
         return False
-    return login(username, password)
-
 
 
 
 def login(username, password):
-    sql = text("SELECT id, password FROM users WHERE username=:username")
+    sql = text("SELECT id, password, admin FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username": username})
-    user = result.fetchone()
-    if not user:
+    users = result.fetchone()
+    if not users:
         return False
     else:
-        if check_password_hash(user.password, password):
+        if check_password_hash(users.password, password):
             session["username"] = username  
-            session["user_id"] = user.id
+            session["user_id"] = users.id
+            session["admin"] = users.admin 
             return True
         else:
             return False
+
+def admin(username):
+    if username and session.get("admin"):
+        return True
+    return False
 
 
 
@@ -40,4 +46,8 @@ def user_id():
 
 
 def logout():
-    del session["user_id"]
+    if "username" in session:
+        del session["username"]
+    if "user_id" in session:
+        del session["user_id"]
+

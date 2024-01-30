@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Restaurant</title>
+</head>
+<body>
+    <h1>Edit Restaurant</h1>
+    <form action="/edit_restaurant/{{ restaurant.id }}" method="post">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" value="{{ restaurant.name }}"><br><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description">{{ restaurant.description }}</textarea><br><br>
+        <label for="location">Location:</label><br>
+        <input type="text" id="location" name="location" value="{{ restaurant.location }}"><br><br>
+        <label for="groups">Groups:</label><br>
+        <select name="groups" multiple>
+            {% for group in all_groups %}
+                <option value="{{ group.id }}" {% if group.id in restaurant_groups %} selected {% endif %}>{{ group.name }}</option>
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" value="Save Changes">
+    </form>
+</body>
+</html>

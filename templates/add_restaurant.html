@@ -1,0 +1,16 @@
+<form action="/add_restaurant" method="POST">
+    <p>Name:<br>
+    <input type="text" name="name"></p>
+    <p>Description:<br>
+    <textarea name="description"></textarea></p>
+    <p>Location:<br>
+    <input type="text" name="location"></p>
+    <p>Groups:</p>
+    <select name="groups" multiple>
+        {% for group in all_groups %}
+            <option value="{{ group.id }}">{{ group.name }}</option>
+        {% endfor %}
+    </select><br><br>
+    <input type="submit" value="Add Restaurant">
+</form>
+
