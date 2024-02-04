@@ -10,7 +10,6 @@ Projektin tarkoituksena on kehittää ravintolasovellus, joka näyttää tietyn 
 
 ## Toiminnot
 
-<<<<<<< HEAD
 ### Rekisteröityminen ja kirjautuminen
 
 Käyttäjä voi rekisteröityä ja kirjautua sisään ja ulos.
@@ -38,6 +37,25 @@ Ravintola voi kuulua yhteen tai useampaan ryhmään, ja ylläpitäjä voi määr
 ### Ravintoloiden tietojen näyttäminen
 
 Ylläpitäjä voi määrittää, mitä tietoja ravintolasta näytetään.
+
+### Sovelluksen testaus
+
+Sovellusta voi testata:
+1. Kloonaa tämän sovelluksen repositorio koneellesi ja mene juurikansioon
+
+2. Luo .env-tiedosto ja lisää sinne:
+- DATABASE_URL=postgresql:///thlu
+- SECRET_KEY=8197ff1d43c232f0bec011b82209ecac
+
+3. Aktivoi virtuaaliympäristö terminaalissa komennoilla:
+- python3 -m venv venv
+- source venv/bin/activate
+- pip install -r requirements.txt
+
+4. Määritä tietokannan taulukot terminaalissa komennoilla:
+- psql< tables.sql
+
+5. Käynnistä sovelluks komennolla flask run
 
 ## Tekemättä olevat toiminnot
 
