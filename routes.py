@@ -1,6 +1,6 @@
 from flask import g, flash, url_for, redirect, render_template, request, session
 from app import app 
-from restaurants import add_review, add_restaurant, get_all_restaurants, delete_restaurant, get_restaurant_by_id, update_restaurant, add_group, get_all_groups, update_restaurant_groups, get_restaurant_groups
+from restaurants import  delete_review, get_reviews_with_users, add_restaurant, get_all_restaurants, delete_restaurant, get_restaurant_by_id, update_restaurant, add_group, get_all_groups, update_restaurant_groups, get_restaurant_groups
 
 import users, restaurants
 
@@ -11,8 +11,6 @@ def index():
     all_groups = get_all_groups() 
     admin = session.get("admin", False)
     return render_template("index.html", all_restaurants=all_restaurants, all_groups=all_groups, admin=admin)
-
-
 
 
 #Kirjautumisjutut
@@ -53,6 +51,8 @@ def logout():
 
 
 
+
+
 #Ravintolajutut
 @app.route("/add_restaurant", methods=["GET", "POST"])
 def add_restaurant_route():
@@ -68,8 +68,6 @@ def add_restaurant_route():
             return redirect("/")
         else:
             return render_template("error.html", message="Ravintolan lisääminen epäonnistui")
-
-
 
 
 #Ravintolan tietojen muokkaus
@@ -115,8 +113,6 @@ def delete_restaurant_route(restaurant_id):
 
 
 
-
-
 #Ryhmän lisääminen
 @app.before_request
 def before_request():
@@ -138,7 +134,7 @@ def add_group_route():
         return render_template("add_group.html")
     
 
-
+#Ravintolan tietojen muokkaus
 @app.route("/update_restaurant_groups/<int:restaurant_id>", methods=["POST"])
 def update_restaurant_groups_route(restaurant_id):
     if request.method == "POST":
@@ -152,16 +148,40 @@ def update_restaurant_groups_route(restaurant_id):
 
 
 #Arvostelun lisääminen
+@app.route("/reviews/<int:restaurant_id>")
+def reviews(restaurant_id):
+    reviews = get_reviews_with_users(restaurant_id)
+    return render_template("reviews.html", restaurant_id=restaurant_id, reviews=reviews)
 
-@app.route("/add_review/<int:restaurant_id>", methods=["GET", "POST"])
-def add_review_route(restaurant_id):
-    if request.method == "GET":
-        if session.get("username"):
-            return render_template("add_review.html", restaurant_id=restaurant_id)
-        else:
-            flash("You must be logged in to add a review", "error")
-            return redirect(url_for("login"))
-    elif request.method == "POST":
+#Arvostelun poistaminen
+@app.route("/delete_review/<int:review_id>", methods=["GET"])
+def delete_review_route(review_id):
+    if "username" not in session:
+        flash("You must be logged in to delete a review", "error")
+        return redirect(url_for("login"))
+
+    # Tarkistetaan, että käyttäjä voi poistaa arvostelun
+    review = get_reviews_with_users(review_id)
+    if not review:
+        flash("Review not found", "error")
+        return redirect(url_for("index"))
+    if session["username"] != review[0]["username"]:
+        flash("You can only delete your own reviews", "error")
+        return redirect(url_for("index"))
+
+    # Poistetaan arvostelu tietokannasta
+    if delete_review(review_id):
+        flash("Review deleted successfully", "success")
+    else:
+        flash("Failed to delete review", "error")
+
+    return redirect(url_for("reviews", restaurant_id=review[0]["restaurant_id"]))
+
+
+#Arvostelujen tarkastelu
+@app.route("/add_review/<int:restaurant_id>", methods=["POST"])
+def add_review(restaurant_id):
+    if request.method == "POST":
         if session.get("username"):
             user_id = session["user_id"]
             review_text = request.form.get("review_text")
@@ -170,10 +190,9 @@ def add_review_route(restaurant_id):
                 flash("Review added successfully", "success")
             else:
                 flash("Failed to add review", "error")
-            return redirect(url_for("index"))
+            return redirect(url_for("reviews", restaurant_id=restaurant_id))
         else:
             flash("You must be logged in to add a review", "error")
             return redirect(url_for("login"))
-        
-#Arvostelujen tarkastelu
+
         

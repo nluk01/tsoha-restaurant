@@ -52,15 +52,15 @@
                     {% endfor %}
                 </li>
                 {% if session.username %}
-                    <form action="/add_review/{{ restaurant.id }}" method="get">
-                        <input type="submit" value="Add Review">
+                    <form action="/reviews/{{ restaurant.id }}" method="get">
+                        <button type="submit">Reviews</button>
                     </form>
                 {% endif %}
                 {% if session.username and session.admin %}
                     <form action="/delete_restaurant/{{ restaurant.id }}" method="post">
                         <input type="submit" value="Delete">
                     </form>
-                    <form action="/edit_restaurant/{{ restaurant.id }}" method="post">
+                    <form action="/edit_restaurant/{{ restaurant.id }}" method="get">
                         <input type="submit" value="Edit">
                     </form>
                 {% endif %}

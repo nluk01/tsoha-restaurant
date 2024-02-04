@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews</title>
+</head>
+
+<body>
+    <div>
+        {% if session.username %}
+            <form action="/logout" method="get">
+                <button type="submit">Log out</button>
+            </form>
+        {% endif %}
+        <form action="/" method="get">
+            <button type="submit">Home Page</button>
+        </form>
+    </div>
+
+    <h1>Reviews</h1>
+    <form action="/add_review/{{ restaurant_id }}" method="POST">
+        <label for="review_text">Review:</label><br>
+        <textarea id="review_text" name="review_text" rows="4" cols="50"></textarea><br>
+        <label for="rating">Rating:</label><br>
+        <input type="number" id="rating" name="rating" min="1" max="5"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Existing Reviews:</h2>
+    <ul>
+        {% for review in reviews %}
+            <li>User: {{ review.username }}</li>
+            <li>Rating: {{ review.rating }}</li>
+            <li>Review: {{ review.review_text }}</li>
+            <li>Posted at: {{ review.created_at }}</li>
+            {% if session.username == review.username %}
+                <form action="/delete_review/{{ review.id }}" method="get">
+                    <button type="submit">Delete</button>
+                </form>
+            {% endif %}
+            <hr>
+        {% endfor %}
+    </ul>
+</body>
+</html>

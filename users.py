@@ -17,8 +17,6 @@ def register(username, password, admin=False):
         print(f"Error during registration: {e}")
         return False
 
-
-
 def login(username, password):
     sql = text("SELECT id, password, admin FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username": username})
@@ -34,15 +32,16 @@ def login(username, password):
         else:
             return False
 
+
 def admin(username):
     if username and session.get("admin"):
         return True
     return False
 
 
-
 def user_id():
     return session.get("user_id", 0)
+
 
 
 def logout():

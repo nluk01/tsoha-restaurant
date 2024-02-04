@@ -30,8 +30,6 @@ def delete_restaurant(restaurant_id):
         return False
     
     
-
-
 # Päivitä ravintola
 def update_restaurant(restaurant_id, name, description, location, groups):
     try:
@@ -88,8 +86,6 @@ def get_all_restaurants():
 
 
 
-
-
 # Lisää uusi ryhmä
 def add_group(name, created_by):
     try:
@@ -114,10 +110,7 @@ def get_all_groups():
         return []
     
 
-
-
 #RAVINTOLA-RYHMÄ liitos hommat
-    
 def add_restaurant_to_group(restaurant_id, group_id):
     try:
         sql = text("INSERT INTO restaurant_group (restaurant_id, group_id) VALUES (:restaurant_id, :group_id)")
@@ -129,7 +122,6 @@ def add_restaurant_to_group(restaurant_id, group_id):
         return False
 
 
-
 def get_restaurant_groups(restaurant_id):
     try:
         sql = text("SELECT g.id, g.name FROM groups g JOIN restaurant_group rg ON g.id = rg.group_id WHERE rg.restaurant_id = :restaurant_id")
@@ -139,9 +131,6 @@ def get_restaurant_groups(restaurant_id):
     except Exception as e:
         print(f"Error fetching restaurant groups: {e}")
         return []
-
-
-
 
 
 def update_restaurant_groups(restaurant_id, groups):
@@ -174,3 +163,40 @@ def add_review(restaurant_id, user_id, review_text, rating):
         print(f"Error adding review: {e}")
         return False
     
+#Arvostelun poistaminen 
+def delete_review(review_id):
+    try:
+        sql = text("DELETE FROM reviews WHERE id = :review_id")
+        db.session.execute(sql, {"review_id": review_id})
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(f"Error deleting review: {e}")
+        return False
+    
+
+#Arvostelujen tulostus
+def get_reviews_with_users(restaurant_id):
+    try:
+        sql = text("""
+            SELECT r.id AS review_id, r.rating, r.review_text, r.created_at, u.username
+            FROM reviews r
+            JOIN users u ON r.user_id = u.id
+            WHERE r.restaurant_id = :restaurant_id
+        """)
+        result = db.session.execute(sql, {"restaurant_id": restaurant_id})
+        reviews = []
+        for row in result:
+            review = {
+                'id': row[0],
+                'rating': row[1],
+                'review_text': row[2],
+                'created_at': row[3],
+                'username': row[4]
+            }
+            reviews.append(review)
+        return reviews
+    except Exception as e:
+        print(f"Error fetching reviews with users: {e}")
+        return []
+
