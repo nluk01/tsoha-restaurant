@@ -10,6 +10,7 @@ Projektin tarkoituksena on kehittää ravintolasovellus, joka näyttää tietyn 
 
 ## Toiminnot
 
+<<<<<<< HEAD
 ### Rekisteröityminen ja kirjautuminen
 
 Käyttäjä voi rekisteröityä ja kirjautua sisään ja ulos.
@@ -44,4 +45,8 @@ Ylläpitäjä voi määrittää, mitä tietoja ravintolasta näytetään.
 - Ylläpitäjä voi määrittää mitä kaikkia tietoja ravintolasta näytetään.
 - Ylläpitäjä voi poistaa käyttäjän antaman arvion.
 - Ravintoloista voidaan etsiä tietoa.
+=======
+-Ravintoloista voidaan etsiä tietoa ja lukea arvioita.
+-Sovelluksessa on kartta, josta näkee tietyn alueen ravintolat. Kun ravintolasta painaa, niin siitä avautuu info-näkymä. (EN TEE TÄTÄ!!)
+>>>>>>> ac07a4b (Päivitetty, mitä toimintoja tehty ja mitä tekemättä)
 
