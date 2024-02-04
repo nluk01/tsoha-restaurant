@@ -1,34 +1,33 @@
-Projektin aiheena on kehittää ravintolasovellus, jossa näkyy tietyn alueen ravintolat. 
+# Ravintolasovellus
 
+Projektin tavoitteena on kehittää ravintolasovellus, joka tarjoaa käyttäjille mahdollisuuden tutustua ja löytää alueensa ravintolatarjontaan.
 
--Käyttäjä on joko peruskäyttäjä tai ylläpitäjä. Rekisteröityessä voi valita onko peruskäyttäjä vai ylläpitäjä-käyttäjä. %%
--Käyttäjä voi rekisteröityä, kirjautua sisälle ja ulos. %%
--Käyttäjä voi etsiä kaikki ravintolat, joiden kuvauksessa käyttäjän syöttämä sana.
--Peruskäyttäjä voi lukea ravintolan arvioita, sekä antaa itse ravintolalle arvion tekstimuodossa tai tähdillä. %% (DELETE -toiminto TEKEMÄTTÄ) 
+## Käyttäjäroolit
 
+- **Peruskäyttäjä:** Rekisteröityessään käyttäjä voi valita haluaako olla peruskäyttäjä vai ylläpitäjä.
+- **Ylläpitäjä:** Vastaa sovelluksen ylläpidosta ja hallinnasta.
 
--Ylläpitäjä voi lisätä tai poistaa ravintoloista. %%
--Ylläpitäjä voi muokata ravintolan tietoja myös jälkeenpäin. %%
--Ylläpitäjä voi määrittää mitä kaikkia tietoja ravintolasta näytetään. 
--Ylläpitäjä voi poistaa käyttäjän antaman arvion. 
--Hän voi myös luoda ryhmiä, joihin ravintoloita voidaan luokitella. %%
--Ravintola voi kuulua yhteen tai useampaan ryhmään. (Ylläpitäjän pitää painaa CTRL samalla, jos halua valita, että ravintola kuuluu useampaan ryhmään) %%
+## Toiminnallisuudet
 
+### Peruskäyttäjä
 
-<<<<<<< HEAD
--Ravintoloista voidaan etsiä tietoa ja lukea arvioita.
--Sovelluksessa on kartta, josta näkee tietyn alueen ravintolat. Kun ravintolasta painaa, niin siitä avautuu info-näkymä. (EN TEE TÄTÄ!!)
-=======
--Ravintoloista voidaan etsiä tietoa
--Ravintoloista voidaan lukea arvioita.%%
+- Rekisteröityminen, kirjautuminen sisään ja ulos.
+- Ravintoloiden etsiminen hakusanan perusteella.
+- Ravintola-arvioiden lukeminen ja antaminen teksti- tai tähtimuodossa.
 
+### Ylläpitäjä
 
+- Ravintoloiden lisääminen ja poistaminen.
+- Ravintolatietojen muokkaaminen.
+- Näytettävien ravintolatietojen määrittäminen.
+- Käyttäjien antamien arvioiden poistaminen.
+- Ryhmien luominen, joihin ravintolat voidaan luokitella.
 
-4.2.2024
--> Tekemettä olevat toiminnot: 
--Käyttäjä voi etsiä kaikki ravintolat, joiden kuvauksessa käyttäjän syöttämä sana. 
--Ylläpitäjä voi määrittää mitä kaikkia tietoja ravintolasta näytetään. 
--Ylläpitäjä voi poistaa käyttäjän antaman arvion. 
--Ravintoloista voidaan etsiä tietoa
->>>>>>> e8e22e0 (Updated)
+### Tulevat toiminnot (4.2.2024)
+
+- Ravintoloiden tietojen muokkaaminen.
+- Käyttäjän antamien arvioiden poistaminen.
+- Ravintoloiden tietojen etsiminen.
+
+**Huom:** Toiminnallisuudet merkitty "DELETE" -toiminnolla eivät ole vielä toteutettuja.
 
