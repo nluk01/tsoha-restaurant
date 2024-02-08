@@ -12,7 +12,7 @@ Projektin tarkoituksena on kehittää ravintolasovellus, joka näyttää tietyn 
 
 - Käyttäjä voi rekisteröityä ja kirjautua sisään ja ulos.
 - Käyttäjä voi hakea ravintoloita tietyn sanan perusteella niiden kuvauksista.
-- Peruskäyttäjä voi lukea ravintolan arvioita ja antaa itse arvioita ravintoloille tekstikommenttien tai tähtiluokituksen avulla.
+- Peruskäyttäjä voi lukea ravintolan arvioita, ja antaa itse arvioita ravintoloille tekstikommenttien tai 1-5 numeroskaalan avulla.
 - Ylläpitäjä voi lisätä ja poistaa ravintoloita sekä muokata ravintoloiden tietoja.
 - Ylläpitäjä voi luoda ryhmiä, joihin ravintoloita voidaan luokitella.
 - Ravintola voi kuulua yhteen tai useampaan ryhmään, ja ylläpitäjä voi määrittää tämän.
@@ -25,7 +25,7 @@ Sovellusta voi testata:
 
 2. Luo .env-tiedosto ja lisää sinne:
 - DATABASE_URL=postgresql:///thlu
-- SECRET_KEY=8197ff1d43c232f0bec011b82209ecac
+- SECRET_KEY=<joku numerosarja>
 
 3. Aktivoi virtuaaliympäristö terminaalissa komennoilla:
 - python3 -m venv venv
@@ -42,4 +42,4 @@ Sovellusta voi testata:
 - Käyttäjä voi etsiä kaikki ravintolat, joiden kuvauksessa käyttäjän syöttämä sana.
 - Ylläpitäjä voi määrittää mitä kaikkia tietoja ravintolasta näytetään.
 - Ylläpitäjä voi poistaa käyttäjän antaman arvion.
-- Ravintoloista voidaan etsiä tietoa.
+
