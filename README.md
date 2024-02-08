@@ -25,7 +25,7 @@ Sovellusta voi testata:
 
 2. Luo .env-tiedosto ja lisää sinne:
 - DATABASE_URL=postgresql:///thlu
-- SECRET_KEY=<joku numerosarja>
+- SECRET_KEY="kirjoita joku numerosarja"
 
 3. Aktivoi virtuaaliympäristö terminaalissa komennoilla:
 - python3 -m venv venv
