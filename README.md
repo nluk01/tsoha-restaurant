@@ -11,8 +11,11 @@ Projektin tarkoituksena on kehittää ravintolasovellus, joka näyttää tietyn 
 ## Toiminnot
 
 - Käyttäjä voi rekisteröityä ja kirjautua sisään ja ulos.
-- Käyttäjä voi hakea ravintoloita tietyn sanan perusteella niiden kuvauksista.
-- Peruskäyttäjä voi lukea ravintolan arvioita, ja antaa itse arvioita ravintoloille tekstikommenttien tai 1-5 numeroskaalan avulla.
+
+- Kirjautuneet peruskäyttäjät voivat hakea ravintoloita tietyn sanan perusteella niiden kuvauksista.
+-  Kirjautuneet peruskäyttäjät voivat lukea ravintolan arvioita, ja antaa itse arvioita ravintoloille tekstikommenttien tai 1-5 numeroskaalan avulla. 
+
+
 - Ylläpitäjä voi lisätä ja poistaa ravintoloita sekä muokata ravintoloiden tietoja.
 - Ylläpitäjä voi luoda ryhmiä, joihin ravintoloita voidaan luokitella.
 - Ravintola voi kuulua yhteen tai useampaan ryhmään, ja ylläpitäjä voi määrittää tämän.
@@ -39,7 +42,10 @@ Sovellusta voi testata:
 
 ## Tekemättä olevat toiminnot
 
-- Käyttäjä voi etsiä kaikki ravintolat, joiden kuvauksessa käyttäjän syöttämä sana.
+- Kirjautuneet peruskäyttäjät voivat etsiä kaikki ravintolat, joiden kuvauksessa käyttäjän syöttämä sana.
+- Kirjautuneet peruskäyttäjät näkevät listan, jossa ravintolat on järjestetty parhaimmasta huonoimpaan arvioiden mukaisesti.
+
 - Ylläpitäjä voi määrittää mitä kaikkia tietoja ravintolasta näytetään.
-- Ylläpitäjä voi poistaa käyttäjän antaman arvion.
+- Ylläpitäjä voi poistaa käyttäjän antaman arvion. (TEHTY 18.2.2024)
+
 
