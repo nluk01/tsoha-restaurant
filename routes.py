@@ -1,6 +1,6 @@
 from flask import g, flash, url_for, redirect, render_template, request, session
 from app import app 
-from restaurants import  delete_review, get_reviews_with_users, add_restaurant, get_all_restaurants, delete_restaurant, get_restaurant_by_id, update_restaurant, add_group, get_all_groups, update_restaurant_groups, get_restaurant_groups
+from restaurants import  get_restaurants_by_rating, get_restaurants_by_description, get_groups_for_restaurant, delete_review, get_reviews_with_users, add_restaurant, get_all_restaurants, delete_restaurant, get_restaurant_by_id, update_restaurant, add_group, get_all_groups, update_restaurant_groups, get_restaurant_groups
 
 import users, restaurants
 
@@ -43,7 +43,7 @@ def login():
         else:
             return render_template("error.html", message="Väärä tunnus tai salasana")
 
-
+#Uloskirjautuminen
 @app.route("/logout")
 def logout():
     users.logout()
@@ -70,29 +70,30 @@ def add_restaurant_route():
             return render_template("error.html", message="Ravintolan lisääminen epäonnistui")
 
 
-#Ravintolan tietojen muokkaus
+
+# Ravintolan tietojen muokkaus
 @app.route("/edit_restaurant/<int:restaurant_id>", methods=["GET", "POST"])
-def edit_restaurant_route(restaurant_id):
+def edit_restaurant(restaurant_id):
     if request.method == "GET":
+        if "username" not in session or not users.admin(session["username"]):
+            return redirect(url_for("login"))
+        
         restaurant = get_restaurant_by_id(restaurant_id)
-        if restaurant:
-            all_groups = get_all_groups()
-            restaurant_groups = get_restaurant_groups(restaurant_id)
-            return render_template("edit_restaurant.html", restaurant=restaurant, all_groups=all_groups, restaurant_groups=restaurant_groups)
-        else:
-            flash("Restaurant not found", "error")
-            return redirect(url_for("index"))
+        all_groups = get_all_groups()  
+        selected_groups = get_groups_for_restaurant(restaurant_id) 
+        return render_template("edit_restaurant.html", restaurant=restaurant, all_groups=all_groups, selected_groups=selected_groups)
     elif request.method == "POST":
-        name = request.form["name"]
-        description = request.form["description"]
-        location = request.form["location"]
+        if "username" not in session or not users.admin(session["username"]):
+            return redirect(url_for("login"))
+        
+        name = request.form.get("name")
+        description = request.form.get("description")
+        location = request.form.get("location")
         groups = request.form.getlist("groups")
         if update_restaurant(restaurant_id, name, description, location, groups):
-            flash("Restaurant information updated successfully", "success")
-            return redirect(url_for("index"))
+            return redirect("/")
         else:
-            flash("Failed to update restaurant information", "error")
-            return redirect(url_for("edit_restaurant_route", restaurant_id=restaurant_id))
+            return render_template("error.html", message="Ravintolan tietojen päivitys epäonnistui")
 
 
 #Ravintolan poistaminen
@@ -147,38 +148,7 @@ def update_restaurant_groups_route(restaurant_id):
 
 
 
-#Arvostelun lisääminen
-@app.route("/reviews/<int:restaurant_id>")
-def reviews(restaurant_id):
-    reviews = get_reviews_with_users(restaurant_id)
-    return render_template("reviews.html", restaurant_id=restaurant_id, reviews=reviews)
-
-#Arvostelun poistaminen
-@app.route("/delete_review/<int:review_id>", methods=["GET"])
-def delete_review_route(review_id):
-    if "username" not in session:
-        flash("You must be logged in to delete a review", "error")
-        return redirect(url_for("login"))
-
-    # Tarkistetaan, että käyttäjä voi poistaa arvostelun
-    review = get_reviews_with_users(review_id)
-    if not review:
-        flash("Review not found", "error")
-        return redirect(url_for("index"))
-    if session["username"] != review[0]["username"]:
-        flash("You can only delete your own reviews", "error")
-        return redirect(url_for("index"))
-
-    # Poistetaan arvostelu tietokannasta
-    if delete_review(review_id):
-        flash("Review deleted successfully", "success")
-    else:
-        flash("Failed to delete review", "error")
-
-    return redirect(url_for("reviews", restaurant_id=review[0]["restaurant_id"]))
-
-
-#Arvostelujen tarkastelu
+# Arvostelujen lisääminen
 @app.route("/add_review/<int:restaurant_id>", methods=["POST"])
 def add_review(restaurant_id):
     if request.method == "POST":
@@ -195,4 +165,60 @@ def add_review(restaurant_id):
             flash("You must be logged in to add a review", "error")
             return redirect(url_for("login"))
 
+
+
+
+# Arvostelun tulostus
+@app.route("/reviews/<int:restaurant_id>")
+def reviews(restaurant_id):
+    restaurant = get_restaurant_by_id(restaurant_id)
+    reviews = get_reviews_with_users(restaurant_id)
+    return render_template("reviews.html", restaurant=restaurant, reviews=reviews)
+
+
+
+
+#Arvostelun poistaminen
+@app.route("/delete_review/<int:review_id>", methods=["POST"])
+def delete_review_route(review_id):
+    if "username" not in session:
+        return redirect(url_for("login"))  
+    if users.admin(session["username"]):
+        if delete_review(review_id):
+            flash("Review deleted successfully", "success")
+        else:
+            flash("Failed to delete review", "error")
+    else:
+        if delete_review(review_id, session["user_id"]):
+            flash("Review deleted successfully", "success")
+        else:
+            flash("Failed to delete review", "error")
         
+    restaurant_id = request.referrer.split("/")[-1].split("?")[0]
+    return redirect(url_for("reviews", restaurant_id=restaurant_id))
+
+
+
+# Hakutoiminnallisuus
+@app.route("/search", methods=["GET"])
+def search():
+    if "username" not in session:
+        return redirect(url_for("login"))
+    search_term = request.args.get("search_term")
+    if search_term:
+        restaurants = get_restaurants_by_description(search_term)
+    else:
+        restaurants = get_all_restaurants()
+    all_groups = get_all_groups() 
+    admin = session.get("admin", False)
+    return render_template("index.html", all_restaurants=restaurants, all_groups=all_groups, admin=admin)
+
+        
+@app.route("/best_rated_restaurants")
+def best_rated_restaurants():
+    if "username" not in session:
+        return redirect(url_for("login"))
+    top_rated_restaurants = get_restaurants_by_rating()  
+    all_groups = get_all_groups() 
+    admin = session.get("admin", False)
+    return render_template("best_rated_restaurants.html", top_rated_restaurants=top_rated_restaurants, all_groups=all_groups, admin=admin)
