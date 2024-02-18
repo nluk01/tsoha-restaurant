@@ -14,12 +14,11 @@
         <textarea id="description" name="description">{{ restaurant.description }}</textarea><br><br>
         <label for="location">Location:</label><br>
         <input type="text" id="location" name="location" value="{{ restaurant.location }}"><br><br>
-        <label for="groups">Groups:</label><br>
-        <select name="groups" multiple>
+        <p>Groups:</p>
             {% for group in all_groups %}
-                <option value="{{ group.id }}" {% if group.id in restaurant_groups %} selected {% endif %}>{{ group.name }}</option>
+                <input type="checkbox" id="group{{ group.id }}" name="groups" value="{{ group.id }}" {% if group.id in selected_groups %}checked{% endif %}>
+                <label for="group{{ group.id }}">{{ group.name }}</label><br>
             {% endfor %}
-        </select><br><br>
         <input type="submit" value="Save Changes">
     </form>
 </body>
