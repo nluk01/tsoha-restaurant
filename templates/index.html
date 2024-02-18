@@ -12,13 +12,15 @@
         <a href="/logout">Log out</a>
         {% if admin %}
             <form action="/add_group" method="POST">
-                <p>Group Name:<br>
+                <p>Add a new group</p>
+                <p>Group name:<br>
                 <input type="text" name="name"></p>
                 <input type="submit" value="Add Group">
             </form>
             <br>
             <hr>
             <form action="/add_restaurant" method="POST">
+                <p>Add a new restaurant</p>
                 <p>Name:<br>
                 <input type="text" name="name"></p>
                 <p>Description:<br>
@@ -26,14 +28,19 @@
                 <p>Location:<br>
                 <input type="text" name="location"></p>
                 <p>Groups:</p>
-                <select name="groups" multiple>
                     {% for group in all_groups %}
-                        <option value="{{ group.id }}">{{ group.name }}</option>
+                        <input type="checkbox" id="group{{ group.id }}" name="groups" value="{{ group.id }}">
+                        <label for="group{{ group.id }}">{{ group.name }}</label><br>
                     {% endfor %}
-                </select><br><br>
                 <input type="submit" value="Add Restaurant">
             </form>
         {% endif %}
+        <form action="/search" method="get">
+            <label for="search_term">Search restaurants by description:</label><br>
+            <input type="text" id="search_term" name="search_term">
+            <button type="submit">Search</button>
+        </form>
+        <a href="/best_rated_restaurants">Top Rated Restaurants</a> 
     {% else %}
         <a href="/login">Log in</a> |
         <a href="/register">Register</a>
@@ -55,14 +62,14 @@
                     <form action="/reviews/{{ restaurant.id }}" method="get">
                         <button type="submit">Reviews</button>
                     </form>
-                {% endif %}
-                {% if session.username and session.admin %}
-                    <form action="/delete_restaurant/{{ restaurant.id }}" method="post">
-                        <input type="submit" value="Delete">
-                    </form>
-                    <form action="/edit_restaurant/{{ restaurant.id }}" method="get">
-                        <input type="submit" value="Edit">
-                    </form>
+                    {% if session.admin %}
+                        <form action="/edit_restaurant/{{ restaurant.id }}" method="get">
+                            <button type="submit">Edit</button>
+                        </form>
+                        <form action="/delete_restaurant/{{ restaurant.id }}" method="post">
+                            <input type="submit" value="Delete">
+                        </form>
+                    {% endif %}
                 {% endif %}
                 <hr>
             {% endfor %}
