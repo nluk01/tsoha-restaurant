@@ -43,7 +43,7 @@ Sovellusta voi testata:
 ## Tekemättä olevat toiminnot
 
 - Kirjautuneet käyttäjät voivat etsiä kaikki ravintolat, joiden kuvauksessa käyttäjän syöttämä sana. (TEHTY 18.2.2024)
-- Kirjautuneet peruskäyttäjät näkevät listan, jossa ravintolat on järjestetty parhaimmasta huonoimpaan arvioiden mukaisesti.
+- Kirjautuneet peruskäyttäjät näkevät listan, jossa ravintolat on järjestetty parhaimmasta huonoimpaan arvioiden mukaisesti. (KESKEN)
 
 - Ylläpitäjä voi määrittää mitä kaikkia tietoja ravintolasta näytetään. (TEHTY 18.2.2024, "Edit"-nappulasta voi muokata ravintolan tietoja)
 - Ylläpitäjä voi poistaa käyttäjän antaman arvion. (TEHTY 18.2.2024)
