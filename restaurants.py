@@ -4,10 +4,10 @@ import users
 
 
 # Lisää uusi ravintola
-def add_restaurant(name, description, location, groups):
+def add_restaurant(name, opening_hours, description, location, groups):
     try:
-        sql = text("INSERT INTO restaurants (name, description, location) VALUES (:name, :description, :location) RETURNING id")
-        result = db.session.execute(sql, {"name": name, "description": description, "location": location})
+        sql = text("INSERT INTO restaurants (name, opening_hours, description, location) VALUES (:name, :opening_hours, :description, :location) RETURNING id")
+        result = db.session.execute(sql, {"name": name,"opening_hours":opening_hours, "description": description, "location": location})
         restaurant_id = result.fetchone()[0]
         update_restaurant_groups(restaurant_id, groups)
         db.session.commit()
@@ -32,10 +32,10 @@ def delete_restaurant(restaurant_id):
     
     
 # Päivitä ravintola
-def update_restaurant(restaurant_id, name, description, location, groups):
+def update_restaurant(restaurant_id, name,  opening_hours, description, location,groups):
     try:
-        sql = text("UPDATE restaurants SET name=:name, description=:description, location=:location WHERE id=:id")
-        db.session.execute(sql, {"name": name, "description": description, "location": location, "id": restaurant_id})
+        sql = text("UPDATE restaurants SET name=:name, opening_hours=:opening_hours, description=:description, location=:location WHERE id=:id")
+        db.session.execute(sql, {"name": name, "opening_hours":opening_hours, "description": description, "location": location, "id": restaurant_id})
         if update_restaurant_groups(restaurant_id, groups):
             db.session.commit()
             return True
@@ -62,7 +62,7 @@ def get_groups_for_restaurant(restaurant_id):
 # Ravintolan tulostushommat
 def get_restaurant_by_id(restaurant_id):
     try:
-        sql = text("SELECT id, name, description, location FROM restaurants WHERE id = :id")
+        sql = text("SELECT id, name, opening_hours, description, location FROM restaurants WHERE id = :id")
         result = db.session.execute(sql, {"id": restaurant_id})
         restaurant = result.fetchone()
         return restaurant
@@ -75,11 +75,11 @@ def get_restaurant_by_id(restaurant_id):
 def get_all_restaurants():
     try:
         sql = text("""
-            SELECT r.id, r.name, r.description, r.location, ARRAY_AGG(g.name) AS groups
+            SELECT r.id, r.name, r.opening_hours, r.description, r.location, ARRAY_AGG(g.name) AS groups
             FROM restaurants r
             LEFT JOIN restaurant_group rg ON r.id = rg.restaurant_id
             LEFT JOIN groups g ON rg.group_id = g.id
-            GROUP BY r.id, r.name, r.description, r.location
+            GROUP BY r.id, r.name, r.opening_hours, r.description, r.location
         """)
         result = db.session.execute(sql)
         restaurants = []
@@ -87,15 +87,17 @@ def get_all_restaurants():
             restaurant = {
                 'id': row[0],
                 'name': row[1],
-                'description': row[2],
-                'location': row[3],
-                'groups': row[4] if row[4] else []  
+                'opening_hours': row[2],
+                'description': row[3],
+                'location': row[4],
+                'groups': row[5] if row[5] else []  
             }
             restaurants.append(restaurant)
         return restaurants
     except Exception as e:
         print(f"Error fetching restaurants: {e}")
         return []
+
     
 
 
@@ -227,7 +229,7 @@ def get_reviews_with_users(restaurant_id):
 def get_restaurants_by_description(search_term):
     try:
         sql = text("""
-            SELECT id, name, description, location
+            SELECT id, name,opening_hours, description, location
             FROM restaurants
             WHERE LOWER(description) LIKE LOWER(:search_term)
         """)
@@ -239,15 +241,27 @@ def get_restaurants_by_description(search_term):
         return []
 
 
-
+#Parhaat raflat
 def get_restaurants_by_rating():
     try:
         sql = text("""
-            SELECT r.id, r.name, r.description, r.location, AVG(reviews.rating) AS avg_rating
-            FROM restaurants r
-            LEFT JOIN reviews ON r.id = reviews.restaurant_id
-            GROUP BY r.id
-            ORDER BY avg_rating DESC NULLS LAST
+            SELECT 
+                r.id, 
+                r.name, 
+                r.opening_hours, 
+                r.description, 
+                r.location, 
+                ROUND(AVG(reviews.rating), 1) AS average_rating
+            FROM 
+                restaurants r
+            LEFT JOIN 
+                reviews ON r.id = reviews.restaurant_id
+            GROUP BY 
+                r.id
+            HAVING 
+                COUNT(reviews.rating) > 0 -- Suodatetaan pois arvostelut, joissa ei ole annettu arvosanaa
+            ORDER BY 
+                average_rating DESC NULLS LAST
         """)
         result = db.session.execute(sql)
         restaurants = []
@@ -255,9 +269,10 @@ def get_restaurants_by_rating():
             restaurant = {
                 'id': row[0],
                 'name': row[1],
-                'description': row[2],
-                'location': row[3],
-                'avg_rating': row[4]
+                'opening_hours': row[2],
+                'description': row[3],
+                'location': row[4],
+                'average_rating': row[5]
             }
             restaurants.append(restaurant)
         return restaurants
