@@ -1,0 +1,50 @@
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
+}
+
+.header:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.header-left,
+.header-right {
+    float: left;
+    background-color: #333; 
+    padding: 15px 0;
+}
+
+
+.header-right {
+    float: right;
+}
+
+.header-right form {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.header-right input[type="text"],
+.header-right button {
+    height: 30px;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+.header-right button {
+    background-color: #0e496c;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.header-right button:hover {
+    background-color: #ffffff;
+}
+
+.content {
+    clear: both;
+}
