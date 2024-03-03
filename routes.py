@@ -1,8 +1,9 @@
 from flask import g, flash, url_for, redirect, render_template, request, session
 from app import app 
-from restaurants import  get_restaurants_by_rating, get_restaurants_by_description, get_groups_for_restaurant, delete_review, get_reviews_with_users, add_restaurant, get_all_restaurants, delete_restaurant, get_restaurant_by_id, update_restaurant, add_group, get_all_groups, update_restaurant_groups, get_restaurant_groups
+from restaurants import get_restaurants_by_rating, get_restaurants_by_description, get_groups_for_restaurant, delete_review, get_reviews_with_users, add_restaurant, get_all_restaurants, delete_restaurant, get_restaurant_by_id, update_restaurant, add_group, get_all_groups, update_restaurant_groups, get_restaurant_groups
 
 import users, restaurants
+import secrets  
 
 
 @app.route("/")
@@ -24,11 +25,11 @@ def register():
         password2 = request.form["password2"]
         admin = "admin" in request.form
         if password1 != password2:
-            return render_template("error.html", message="Salasanat eroavat")
+            return render_template("error.html", message="Passwords didn't match. Please try again!")
         if users.register(username, password1, admin):
             return redirect("/")
         else:
-            return render_template("error.html", message="Rekisteröinti ei onnistunut")
+            return render_template("error.html", message="Register was not succesful. Please try again!")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -39,9 +40,11 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         if users.login(username, password):
+            # Luodaan csrf_token ja tallennetaan se istuntoon
+            session['csrf_token'] = secrets.token_hex(16)
             return redirect("/")
         else:
-            return render_template("error.html", message="Väärä tunnus tai salasana")
+            return render_template("error.html", message="Wrong username or password. Please try again!")
 
 #Uloskirjautuminen
 @app.route("/logout")
@@ -61,13 +64,14 @@ def add_restaurant_route():
         return render_template("add_restaurant.html", all_groups=all_groups)
     elif request.method == "POST":
         name = request.form["name"]
+        opening_hours= request.form["opening_hours"]
         description = request.form["description"]
         location = request.form["location"]
         groups = request.form.getlist("groups")
-        if add_restaurant(name, description, location, groups):
+        if add_restaurant(name, opening_hours, description, location, groups):
             return redirect("/")
         else:
-            return render_template("error.html", message="Ravintolan lisääminen epäonnistui")
+            return render_template("error.html", message="There was error adding a new restaurant")
 
 
 
@@ -87,13 +91,14 @@ def edit_restaurant(restaurant_id):
             return redirect(url_for("login"))
         
         name = request.form.get("name")
+        opening_hours = request.form.get("opening_hours")
         description = request.form.get("description")
         location = request.form.get("location")
         groups = request.form.getlist("groups")
-        if update_restaurant(restaurant_id, name, description, location, groups):
+        if update_restaurant(restaurant_id, name, opening_hours, description, location, groups):
             return redirect("/")
         else:
-            return render_template("error.html", message="Ravintolan tietojen päivitys epäonnistui")
+            return render_template("error.html", message="Failed updating restaurant's info.")
 
 
 #Ravintolan poistaminen
@@ -108,8 +113,6 @@ def delete_restaurant_route(restaurant_id):
         flash("Failed to delete restaurant", "error")
 
     return redirect(url_for("index"))
-
-
 
 
 
@@ -143,7 +146,8 @@ def update_restaurant_groups_route(restaurant_id):
         if update_restaurant_groups(restaurant_id, groups):
             return redirect("/")
         else:
-            return render_template("error.html", message="Ravintolan ryhmien päivitys epäonnistui")
+            return render_template("error.html", message="Failed to update restaurant's group")
+
 
 
 
@@ -166,16 +170,12 @@ def add_review(restaurant_id):
             return redirect(url_for("login"))
 
 
-
-
 # Arvostelun tulostus
 @app.route("/reviews/<int:restaurant_id>")
 def reviews(restaurant_id):
     restaurant = get_restaurant_by_id(restaurant_id)
     reviews = get_reviews_with_users(restaurant_id)
     return render_template("reviews.html", restaurant=restaurant, reviews=reviews)
-
-
 
 
 #Arvostelun poistaminen
@@ -199,6 +199,8 @@ def delete_review_route(review_id):
 
 
 
+
+
 # Hakutoiminnallisuus
 @app.route("/search", methods=["GET"])
 def search():
@@ -214,6 +216,7 @@ def search():
     return render_template("index.html", all_restaurants=restaurants, all_groups=all_groups, admin=admin)
 
         
+
 @app.route("/best_rated_restaurants")
 def best_rated_restaurants():
     if "username" not in session:
