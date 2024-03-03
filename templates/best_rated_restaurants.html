@@ -1,20 +1,26 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Rated Restaurants</title>
-</head>
-<body>
-    <h1>Top Rated Restaurants</h1>
-    <ul>
-        {% for restaurant in top_rated_restaurants %}
-            <li>Name: {{ restaurant.name }}</li>
-            <li>Description: {{ restaurant.description }}</li>
-            <li>Location: {{ restaurant.location }}</li>
-            <li>Rating: {{ restaurant.average_rating }}</li>
-            <hr>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}
+    Top Rated Restaurants
+{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Top Rated Restaurants</h1>
+    </header>
+    <main>
+        <ul>
+            {% for restaurant in top_rated_restaurants %}
+                <li class="restaurant">
+                    <h2>{{ restaurant.name }}</h2>
+                    <p>Opening hours: {{ restaurant.opening_hours }}</p>
+                    <p>Description: {{ restaurant.description }}</p>
+                    <p>Location: {{ restaurant.location }}</p>
+                    <p>Average rating: {{ restaurant.average_rating }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+    <footer>
+    </footer>
+{% endblock %}
