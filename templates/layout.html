@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant App</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1>Restaurant App</h1>
+        </div>
+        <div class="header-right">
+            <nav>
+                <a href="/">Home page</a>
+                <a href="/best_rated_restaurants">Top Rated Restaurants</a>
+                <form action="/search" method="get">
+                    <input type="text" id="search_term" name="search_term" placeholder="Search...">
+                    <button type="submit">Search</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+    </footer>
+</body>
+</html>
