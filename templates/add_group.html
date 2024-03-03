@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Group</title>
-</head>
-<body>
-    <h1>Add a New Group</h1>
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Add a new group</h1>
     <form action="/add_group" method="post">
-        <label for="name">Name:</label><br>
+        <label for="name">Nimi:</label><br>
         <input type="text" id="name" name="name"><br><br>
-        <input type="submit" value="Add Group">
+        <input type="submit" value="Lisää ryhmä">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
-</body>
-</html>
+{% endblock %}
