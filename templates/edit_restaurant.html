@@ -1,25 +1,32 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Restaurant</title>
-</head>
-<body>
-    <h1>Edit Restaurant</h1>
-    <form action="/edit_restaurant/{{ restaurant.id }}" method="post">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name" value="{{ restaurant.name }}"><br><br>
-        <label for="description">Description:</label><br>
-        <textarea id="description" name="description">{{ restaurant.description }}</textarea><br><br>
-        <label for="location">Location:</label><br>
-        <input type="text" id="location" name="location" value="{{ restaurant.location }}"><br><br>
-        <p>Groups:</p>
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Restaurant
+{% endblock %}
+
+{% block content %}
+    <main class="content">
+        <form action="/edit_restaurant/{{ restaurant.id }}" method="post">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" value="{{ restaurant.name }}"><br><br>
+            <label for="opening_hours">Opening hours:</label><br>
+            <input type="text" id="opening_hours" name="opening_hours" value="{{ restaurant.opening_hours }}"><br><br>
+            <label for="description">Description:</label><br>
+            <textarea id="description" name="description">{{ restaurant.description }}</textarea><br><br>
+            <label for="location">Location:</label><br>
+            <input type="text" id="location" name="location" value="{{ restaurant.location }}"><br><br>
+            <p>Groups:</p>
             {% for group in all_groups %}
                 <input type="checkbox" id="group{{ group.id }}" name="groups" value="{{ group.id }}" {% if group.id in selected_groups %}checked{% endif %}>
                 <label for="group{{ group.id }}">{{ group.name }}</label><br>
             {% endfor %}
-        <input type="submit" value="Save Changes">
-    </form>
-</body>
-</html>
+            <input type="submit" value="Save Changes">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+    </main>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+{% endblock %}
+
