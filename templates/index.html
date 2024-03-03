@@ -1,56 +1,57 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravintolasovellus</title>
-</head>
-<body>
-    <h1>Welcome to Restaurant-app!</h1>
+{% extends "layout.html" %}
+
+{% block title %}
+    Welcome to Restaurant App
+{% endblock %}
+
+{% block content %}
     {% if session.username %}
         <p>You are logged in as: {{ session.username }}</p>
         <a href="/logout">Log out</a>
         {% if admin %}
-            <form action="/add_group" method="POST">
-                <p>Add a new group</p>
-                <p>Group name:<br>
-                <input type="text" name="name"></p>
-                <input type="submit" value="Add Group">
-            </form>
-            <br>
+            <div>
+                <form action="/add_group" method="POST">
+                    <h3>Add a new group</h3>
+                    <label for="group_name">Group name:</label><br>
+                    <input type="text" id="group_name" name="name"><br><br>
+                    <input type="submit" value="Add Group">
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                </form>
+            </div>
             <hr>
-            <form action="/add_restaurant" method="POST">
-                <p>Add a new restaurant</p>
-                <p>Name:<br>
-                <input type="text" name="name"></p>
-                <p>Description:<br>
-                <textarea name="description"></textarea></p>
-                <p>Location:<br>
-                <input type="text" name="location"></p>
-                <p>Groups:</p>
+            <div>
+                <form action="/add_restaurant" method="POST">
+                    <h3>Add a new restaurant</h3>
+                    <label for="restaurant_name">Name:</label><br>
+                    <input type="text" id="restaurant_name" name="name"><br>
+                    <label for="opening_hours">Opening hours:</label><br>
+                    <input type="text" id="opening_hours" name="opening_hours"><br>
+                    <label for="description">Description:</label><br>
+                    <textarea id="description" name="description"></textarea><br>
+                    <label for="location">Location:</label><br>
+                    <input type="text" id="location" name="location"><br>
+                    <p>Groups:</p>
                     {% for group in all_groups %}
                         <input type="checkbox" id="group{{ group.id }}" name="groups" value="{{ group.id }}">
                         <label for="group{{ group.id }}">{{ group.name }}</label><br>
                     {% endfor %}
-                <input type="submit" value="Add Restaurant">
-            </form>
+                    <br>
+                    <input type="submit" value="Add Restaurant">
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                </form>
+            </div>
         {% endif %}
-        <form action="/search" method="get">
-            <label for="search_term">Search restaurants by description:</label><br>
-            <input type="text" id="search_term" name="search_term">
-            <button type="submit">Search</button>
-        </form>
-        <a href="/best_rated_restaurants">Top Rated Restaurants</a> 
     {% else %}
         <a href="/login">Log in</a> |
         <a href="/register">Register</a>
     {% endif %}
 
     {% if all_restaurants %}
-        <h2>All Restaurants:</h2>
+        <h4>All Restaurants:</h4>
         <ul>
             {% for restaurant in all_restaurants %}
                 <li>Name: {{ restaurant.name }}</li>
+                <li>Opening hours: {{ restaurant.opening_hours }}</li>
                 <li>Description: {{ restaurant.description }}</li>
                 <li>Location: {{ restaurant.location }}</li>
                 <li>Groups:
@@ -67,7 +68,8 @@
                             <button type="submit">Edit</button>
                         </form>
                         <form action="/delete_restaurant/{{ restaurant.id }}" method="post">
-                            <input type="submit" value="Delete">
+                            <button type="submit">Delete</button>
+                            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                         </form>
                     {% endif %}
                 {% endif %}
@@ -75,5 +77,4 @@
             {% endfor %}
         </ul>
     {% endif %}
-</body>
-</html>
+{% endblock %}
