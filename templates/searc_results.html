@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results</title>
-</head>
-<body>
+{% extends "layout.html" %}
+
+{% block content %}
     <h1>Search Results for "{{ search_term }}"</h1>
     {% if restaurants %}
         <ul>
             {% for restaurant in restaurants %}
                 <li>Name: {{ restaurant.name }}</li>
+                <li>Opening hours: {{ restaurant.opening_hours }}</li>
                 <li>Description: {{ restaurant.description }}</li>
                 <li>Location: {{ restaurant.location }}</li>
                 <hr>
@@ -19,5 +15,4 @@
     {% else %}
         <p>No restaurants found.</p>
     {% endif %}
-</body>
-</html>
+{% endblock %}
