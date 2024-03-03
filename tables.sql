@@ -1,14 +1,16 @@
+-- KÄYTTÄJÄT
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE,
     password TEXT,
-    admin BOOL DEFAULT false
+    admin BOOLEAN DEFAULT false
 );
 
--- Ravintolat-taulu
+-- RAFLAT
 CREATE TABLE restaurants (
     id SERIAL PRIMARY KEY,
     name TEXT,
+    opening_hours TEXT,
     description TEXT,
     location TEXT,
     rating INTEGER,
@@ -16,17 +18,18 @@ CREATE TABLE restaurants (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Arviot-taulu
+-- ARVOSTELUT
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
     restaurant_id INTEGER REFERENCES restaurants(id),
     user_id INTEGER REFERENCES users(id),
     review_text TEXT,
     rating INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    average_rating DOUBLE PRECISION 
 );
 
--- Ryhmät-taulu
+-- RYHMÄT
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name TEXT,
@@ -34,7 +37,7 @@ CREATE TABLE groups (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Ravintola-ryhmä yhteys -taulu
+-- RAFLA-RYHMÄ SIDOS
 CREATE TABLE restaurant_group (
     id SERIAL PRIMARY KEY,
     restaurant_id INTEGER REFERENCES restaurants(id),
